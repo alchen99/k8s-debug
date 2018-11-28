@@ -1,6 +1,14 @@
 # Docker/K8 debugging tools
 
-Containerized AWS CLI, kubectl, aws-iam-authenticator, curl, and jq on alpine to help with debugging K8s and containers.
+Container to help with debugging K8s and other containers. Some of the things configured are as follows:
+
+* bash and bash-completion
+* AWS CLI and aws-iam-authenticator
+* kubectl with alias k defined
+* curl
+* jq
+* screen
+* vim and vimdiff
 
 ## Build
 
