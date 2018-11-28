@@ -32,7 +32,7 @@ RUN apk add -v --update \
     && chmod +x /usr/local/bin/kubectl \
     && heptioVer=`curl -s https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/latest | cut -d'"' -f2 | awk '{gsub(".*/v","")}1'` \
     && curl -L -s https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${heptioVer}/heptio-authenticator-aws_${heptioVer}_linux_amd64 -o /usr/local/bin/heptio-authenticator-aws \
-    && chmod +x /usr/local/bin/heptio-authenticator-aws
+    && chmod +x /usr/local/bin/heptio-authenticator-aws \
     && sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd
 
 VOLUME /root/.aws
