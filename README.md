@@ -16,6 +16,10 @@ Container to help with debugging K8s and other containers. Some of the things co
 docker build -t alchen99/k8s-debug .
 ```
 
+Automated build on Docker Hub
+
+[![DockerHub Badge](http://dockeri.co/image/alchen99/k8s-debug)](https://hub.docker.com/r/alchen99/k8s-debug/)
+
 ## Usage
 
 Configure:
