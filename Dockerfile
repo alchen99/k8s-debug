@@ -21,6 +21,7 @@ RUN apk update \
        jq \
        less \
        mailcap \
+       redis \
        screen \
        python \
        unzip \
