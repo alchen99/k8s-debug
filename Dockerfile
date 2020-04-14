@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3
 
 LABEL maintaner="Alice Chen <alchen@apache.org>"
 
@@ -21,6 +21,8 @@ RUN apk update \
        jq \
        less \
        mailcap \
+       openldap-clients \
+       openssl \
        redis \
        screen \
        python \
@@ -40,7 +42,7 @@ RUN apk update \
     && consulURL=`curl -s https://www.consul.io/downloads.html | grep linux_amd64 | cut -d'"' -f2` \
     && curl -L -s $consulURL -o /usr/local/bin/consul.zip \
     && unzip /usr/local/bin/consul.zip \
-    && vaultVer=`curl -s https://www.vaultproject.io/downloads.html | grep releases | sed 's/vault/!!/g' | awk -F'!!' '{print $2}' | cut -d'/' -f2` \
+    && vaultVer=`curl -s https://github.com/hashicorp/vault/releases | grep "vault/releases/tag" | grep -v rc | grep -v beta | head -1 | awk -F'/v|"' '{print $4}'` \
     && curl -L -s https://releases.hashicorp.com/vault/${vaultVer}/vault_${vaultVer}_linux_amd64.zip -o /usr/local/bin/vault.zip \
     && unzip /usr/local/bin/vault.zip \
     && ctemplateVer=`curl -s https://github.com/hashicorp/consul-template/releases | grep 'consul-template/releases/' | head -1 | awk -F'/|"|v' '{print $(NF-1)}'` \
