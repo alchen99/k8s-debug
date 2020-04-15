@@ -21,6 +21,7 @@ RUN apk update \
        jq \
        less \
        mailcap \
+       mysql-client \
        openldap-clients \
        openssl \
        redis \

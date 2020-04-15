@@ -7,6 +7,7 @@ Container to help with debugging K8s and other containers. Some of the things co
 * kubectl with alias k defined
 * curl
 * jq
+* mysql-client
 * openldap-clients
 * openssl
 * screen
