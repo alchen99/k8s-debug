@@ -17,6 +17,7 @@ RUN apk update \
        coreutils \
        curl \
        groff \
+       httpie \
        htop iftop \
        jq \
        less \

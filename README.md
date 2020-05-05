@@ -5,7 +5,7 @@ Container to help with debugging K8s and other containers. Some of the things co
 * bash and bash-completion
 * AWS CLI and aws-iam-authenticator
 * kubectl with alias k defined
-* curl
+* curl, httpie
 * jq
 * mysql-client
 * openldap-clients
