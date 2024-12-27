@@ -45,7 +45,7 @@ RUN cd /usr/local/bin \
     && echo "Installing gcloud SDK ${SDK_VERSION} ..." \
     && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${SDK_VERSION}-linux-x86_64.tar.gz \
     && tar -xf google-cloud-cli-${SDK_VERSION}-linux-x86_64.tar.gz \
-    && ./google-cloud-sdk/install.sh --usage-reporting false --quiet \
+    && ./google-cloud-sdk/install.sh --usage-reporting false --command-completion false --install-python false --quiet \
     && rm -f google-cloud-cli-*-linux-x86_64.tar.gz \
     && curl -s "https://gist.githubusercontent.com/alchen99/bf30697e99a4e0faa63dc1b69eb348cb/raw/b7346af68b9f5eabd16700e777dfe9456fc57bba/.bashrc-append" >> /root/.bashrc \
     && sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd 
