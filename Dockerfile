@@ -54,9 +54,8 @@ RUN cd /usr/local/bin \
     && echo "Installing gcloud SDK ${SDK_VERSION} ..." \
     && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${SDK_VERSION}-linux-x86_64.tar.gz \
     && tar -xf google-cloud-cli-${SDK_VERSION}-linux-x86_64.tar.gz \
-    && ./google-cloud-sdk/install.sh --usage-reporting false --quiet \
+    && ./google-cloud-sdk/install.sh --usage-reporting false --command-completion false --install-python false --quiet \
     && rm -f google-cloud-cli-*-linux-x86_64.tar.gz \
-    && echo "export PATH=/opt/google-cloud-sdk/bin:$PATH" >> /root/.bashrc \
     && sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd 
 
 VOLUME /root/.aws
