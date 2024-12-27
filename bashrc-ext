@@ -1,0 +1,63 @@
+# additional setup for remote VM
+alias screendr='/usr/bin/screen -DR'
+alias tmuxdr='/usr/bin/tmux attach-session -d'
+alias vi="/usr/bin/vim"
+alias vimdiff="/usr/bin/vimdiff -O ";
+set -o vi
+
+# Terminal colors
+export COLOR_NC='\e[0m' # No Color
+export COLOR_BLACK='\e[0;30m'
+export COLOR_GRAY='\e[1;30m'
+export COLOR_RED='\e[0;31m'
+export COLOR_LIGHT_RED='\e[1;31m'
+export COLOR_GREEN='\e[0;32m'
+export COLOR_LIGHT_GREEN='\e[1;32m'
+export COLOR_BROWN='\e[0;33m'
+export COLOR_YELLOW='\e[1;33m'
+export COLOR_BLUE='\e[0;34m'
+export COLOR_LIGHT_BLUE='\e[1;34m'
+export COLOR_PURPLE='\e[0;35m'
+export COLOR_LIGHT_PURPLE='\e[1;35m'
+export COLOR_CYAN='\e[0;36m'
+export COLOR_LIGHT_CYAN='\e[1;36m'
+export COLOR_LIGHT_GRAY='\e[0;37m'
+export COLOR_WHITE='\e[1;37m'
+
+# kubectl
+if command -v kubectl >/dev/null 2>&1; then
+  source <(kubectl completion bash)
+  if [ -f ~/.kube/config ]; then
+    export KUBECONFIG="~/.kube/config"
+  fi
+  
+  alias k='kubectl'
+  alias kube='kubectl'
+  alias kcc='kubectl config current-context'
+  alias kgc='kubectl config get-contexts'
+  alias kuse='kubectl config use-context'
+
+  alias kb='kubectl kustomize'
+  alias kcluster=$(kubectl config view | grep clusters | cut -d' ' -f2)
+
+  alias km='kubectl -n monitoring'
+  alias kcert='kubectl -n cert-manager'
+  alias kdash='kubectl -n kubernetes-dashboard'
+  alias knginx='kubectl -n ingress-nginx'
+  alias ksys='kubectl -n kube-system'
+fi
+
+alias la='ls -ialG'
+alias ll='ls -ilG'
+alias ls='ls -i --color=auto'
+alias lt='ls -ilGtr'
+
+
+if [[ -f /usr/local/bin/starship || -f /snap/bin/starship ]]; then eval "$(starship init bash)"; fi
+
+# gcloud
+if [[ -d /opt/google-cloud-sdk ]]; then
+  #export CLOUDSDK_PYTHON=python3.8
+  . /opt/google-cloud-sdk/path.bash.inc
+  . /opt/google-cloud-sdk/completion.bash.inc
+fi

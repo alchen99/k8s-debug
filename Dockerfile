@@ -6,80 +6,56 @@ LABEL maintaner="Alice Chen <alchen@apache.org>"
 LABEL org.label-schema.vcs-url="https://github.com/alchen99/k8s-debug" \
       org.label-schema.docker.dockerfile="/Dockerfile"
 
-ADD vimrc /etc/vimrc
-ADD screenrc /etc/screenrc
-
-RUN apk update \
+RUN --mount=type=cache,target=/var/cache/apk,sharing=locked \
+    apk update \
     && apk upgrade \
     && apk add -v --update \
        bash bash-completion \
        ca-certificates \
        coreutils \
        curl \
+       font-hack-nerd \
+       git \
+       gnupg \
        groff \
        httpie \
        htop iftop \
        jq \
+       kubectl kubectl-bash-completion \
+       libc6-compat \
        less \
        mailcap \
-       mysql-client \
-       openldap-clients \
+       openssh-client \
        openssl \
-       redis \
-       screen \
-       python \
+       postgresql16-client \
+       python3 py3-crcmod py3-openssl \
+       tmux \
+       tree \
        unzip \
        vim vimdiff \
-    && apk add -v --update -t deps py-pip \
-    && pip install --upgrade awscli==1.16.40 s3cmd==2.0.2 python-magic \
-    && apk del --purge deps \
-    && rm -rf /var/cache/apk/* \
-    && cd /usr/local/bin \
-    && kubectlVer=`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt` \
-    && curl -L -s https://storage.googleapis.com/kubernetes-release/release/${kubectlVer}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
-    && chmod +x /usr/local/bin/kubectl \
-    && heptioVer=`curl -s https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/latest | cut -d'"' -f2 | awk '{gsub(".*/v","")}1'` \
-    && curl -L -s https://github.com/kubernetes-sigs/aws-iam-authenticator/releases/download/v${heptioVer}/heptio-authenticator-aws_${heptioVer}_linux_amd64 -o /usr/local/bin/heptio-authenticator-aws \
-    && chmod +x /usr/local/bin/heptio-authenticator-aws \
-    && consulURL=`curl -s https://www.consul.io/downloads.html | grep linux_amd64 | cut -d'"' -f2` \
-    && curl -L -s $consulURL -o /usr/local/bin/consul.zip \
-    && unzip /usr/local/bin/consul.zip \
-    && vaultVer=`curl -s https://github.com/hashicorp/vault/releases | grep "vault/releases/tag" | grep -v rc | grep -v beta | head -1 | awk -F'/v|"' '{print $4}'` \
-    && curl -L -s https://releases.hashicorp.com/vault/${vaultVer}/vault_${vaultVer}_linux_amd64.zip -o /usr/local/bin/vault.zip \
-    && unzip /usr/local/bin/vault.zip \
-    && ctemplateVer=`curl -s https://github.com/hashicorp/consul-template/releases | grep 'consul-template/releases/' | head -1 | awk -F'/|"|v' '{print $(NF-1)}'` \
-    && curl -L -s https://releases.hashicorp.com/consul-template/${ctemplateVer}/consul-template_${ctemplateVer}_linux_amd64.zip -o /usr/local/bin/consul-template.zip \
-    && unzip /usr/local/bin/consul-template.zip \
-    && rm -f /usr/local/bin/*.zip \
-    && sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd \
-    && echo '\
-       . /etc/profile ; \
-       PS1='\''\[\e[01;33m\][\h \u:\[\e[01;34m\]\w\[\e[01;33m\]]\[\e[00m\]\$ '\'' ; \
-       eval `dircolors -b` ; \
-       alias ls="ls --color=auto" ; \
-       alias ll="ls -la" ; \
-       alias screendr="/usr/bin/screen -DR"; \
-       alias vi="/usr/bin/vim"; \
-       alias vimdiff="/usr/bin/vimdiff -O "; \
-       # shorten kubectl ; \
-       function kub () { \
-         kubectl $@ ; \
-       } ; \
-       export -f kub ; \
-       function k () { \
-         kubectl $@ ; \
-       } ; \
-       export -f k ; \
-       source <(kubectl completion bash) ; \
-       # add completion ; \
-       complete -o default -F __start_kubectl k ; \
-       complete -o default -F __start_kubectl kub ; \
-       ' >> /etc/bash.bashrc \
-       && echo '. ~/.bashrc' > /root/.bash_profile \
-       && echo '. /etc/bash.bashrc' > /root/.bashrc
+       wget \
+       yq-go
 
-VOLUME /root/.aws
+RUN cd /usr/local/bin \
+    && mkdir /root/.config \
+    && echo "Installing Starship.rs ..." \
+    && curl -L -sS https://starship.rs/install.sh | sh -s -- --yes \
+    && cd /opt \
+    && SDK_VERSION=$(curl -L -sS "https://cloud.google.com/sdk/docs/release-notes" | grep '<h2 id=' | head -n 1 | sed 's/.*data-text="\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/') \
+    && echo "Installing gcloud SDK ${SDK_VERSION} ..." \
+    && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${SDK_VERSION}-linux-x86_64.tar.gz \
+    && tar -xf google-cloud-cli-${SDK_VERSION}-linux-x86_64.tar.gz \
+    && ./google-cloud-sdk/install.sh --usage-reporting false --quiet \
+    && rm -f google-cloud-cli-*-linux-x86_64.tar.gz \
+    && curl -s "https://gist.githubusercontent.com/alchen99/bf30697e99a4e0faa63dc1b69eb348cb/raw/b7346af68b9f5eabd16700e777dfe9456fc57bba/.bashrc-append" >> /root/.bashrc \
+    && sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd 
+
+ADD vimrc /etc/vimrc
+ADD screenrc /etc/screenrc
+ADD tmux.conf /etc/tmux.conf
+ADD bashrc-ext /root/.bashrc-ext
+ADD starship.toml /root/.config/starship.toml
+
 VOLUME /project
 WORKDIR /root
-CMD ["/bin/bash", "-l"]
-
+CMD ["tail", "-f", "/dev/null"]
