@@ -3,6 +3,9 @@ name: buildpush
 on:
   push:
 
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -24,4 +27,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: alchen99/k8s-debug:latest
+          tags: alchen99/k8s-debug:${{env.BRANCH_NAME}}
