@@ -40,7 +40,7 @@ RUN --mount=type=cache,target=/var/cache/apk,sharing=locked \
        yq-go
 RUN cd /usr/local/bin \
     && mkdir /root/.config \
-    && curl -s "https://gist.githubusercontent.com/alchen99/19176397fffbc5b43c37fff1ea2869c1/raw/40a6abcd92cc31afd2dd3303de134e354dad9180/starship.toml" -o /root/.config/starship.toml \
+    && curl -s "https://gist.githubusercontent.com/alchen99/19176397fffbc5b43c37fff1ea2869c1/raw/63efe5f3b44cd96239a7bcbe608b7e2e53bc6f8a/starship.toml" -o /root/.config/starship.toml \
     && curl -s "https://gist.githubusercontent.com/alchen99/cfe481c230d346ebc94508071fdd36bd/raw/87b14e67e585e5d6240b817af2b7184843bf3a52/.bashrc-ext" -o /root/.bashrc-ext \
     && curl -L -sS "https://gist.githubusercontent.com/alchen99/973d2e314cfd648b72bb602d54951644/raw/3cc99ae6721622e82404f1102dcf6065c7be4317/.vimrc" -o /root/.vimrc \
     && curl -L -sS "https://gist.githubusercontent.com/alchen99/4a386a801bdfe13007ba489383c4acb6/raw/f421bc31d533cf65e809059161a59c8cc556e193/.screenrc" -o /root/.screenrc \
